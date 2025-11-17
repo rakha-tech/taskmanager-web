@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import { API_BASE_URL } from "@/lib/api";
 
 export interface Task {
   id: string;
@@ -26,6 +27,13 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
+// 🔥 Normalisasi helper function (biar bersih)
+const normalizeTask = (t: any): Task => ({
+  ...t,
+  status: t.status.toLowerCase().replace("inprogress", "in-progress"),
+  priority: t.priority.toLowerCase(),
+});
+
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,72 +48,117 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, token]);
 
+  // 📌 FETCH TASKS
   const fetchTasks = async () => {
     setIsLoading(true);
     setError(null);
+
     try {
-      const storedTasks = localStorage.getItem("tasks");
-      if (storedTasks) {
-        setTasks(JSON.parse(storedTasks));
-      }
-    } catch (err) {
+      const res = await fetch(`${API_BASE_URL}/api/Tasks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch tasks");
+
+      const data = await res.json();
+      const normalized = data.map((t: any) => normalizeTask(t));
+
+      setTasks(normalized);
+    } catch {
       setError("Failed to fetch tasks");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 📌 ADD TASK
   const addTask = async (
     taskData: Omit<Task, "id" | "createdAt" | "userId">
   ) => {
     setIsLoading(true);
     setError(null);
-    try {
-      const newTask: Task = {
-        ...taskData,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        userId: user?.id || "1",
-      };
 
-      const updatedTasks = [...tasks, newTask];
-      setTasks(updatedTasks);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    } catch (err) {
+    // normalisasi sebelum kirim ke backend
+    const sendData = {
+      ...taskData,
+      status: taskData.status.replace("in-progress", "inprogress"),
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/Tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(sendData),
+      });
+
+      if (!res.ok) throw new Error("Failed to add task");
+
+      const newTaskRaw = await res.json();
+      const newTask = normalizeTask(newTaskRaw);
+
+      setTasks((prev) => [...prev, newTask]);
+    } catch {
       setError("Failed to add task");
-      throw err;
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 📌 UPDATE TASK
   const updateTask = async (id: string, taskData: Partial<Task>) => {
     setIsLoading(true);
     setError(null);
+
+    // normalisasi sebelum kirim
+    const sendData = {
+      ...taskData,
+      status:
+        taskData.status?.replace("in-progress", "inprogress") ??
+        taskData.status,
+    };
+
     try {
-      const updatedTasks = tasks.map((task) =>
-        task.id === id ? { ...task, ...taskData } : task
-      );
-      setTasks(updatedTasks);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    } catch (err) {
-      setError("Failed to update task");
-      throw err;
+      const res = await fetch(`${API_BASE_URL}/api/Tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(sendData),
+      });
+
+      if (!res.ok) throw new Error("Failed to update task");
+
+      const updatedRaw = await res.json();
+      const updated = normalizeTask(updatedRaw);
+
+      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 📌 DELETE TASK
   const deleteTask = async (id: string) => {
     setIsLoading(true);
     setError(null);
+
     try {
-      const updatedTasks = tasks.filter((task) => task.id !== id);
-      setTasks(updatedTasks);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    } catch (err) {
-      setError("Failed to delete task");
-      throw err;
+      const res = await fetch(`${API_BASE_URL}/api/Tasks/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to delete task");
+
+      setTasks((prev) => prev.filter((t) => t.id !== id));
     } finally {
       setIsLoading(false);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { API_BASE_URL } from "@/lib/api";
 
 interface User {
   id: string;
@@ -38,18 +39,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const mockUser = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
-      };
-      const mockToken = "mock-jwt-token-" + Date.now();
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      localStorage.setItem("token", mockToken);
-      localStorage.setItem("user", JSON.stringify(mockUser));
+      if (!res.ok) throw new Error("Login failed");
+      const data = await res.json();
 
-      setToken(mockToken);
-      setUser(mockUser);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      setToken(data.token);
+      setUser(data.user);
     } finally {
       setIsLoading(false);
     }
@@ -58,18 +61,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const mockUser = {
-        id: "1",
-        email,
-        name,
-      };
-      const mockToken = "mock-jwt-token-" + Date.now();
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      localStorage.setItem("token", mockToken);
-      localStorage.setItem("user", JSON.stringify(mockUser));
+      if (!res.ok) throw new Error("Register failed");
+      const data = await res.json();
 
-      setToken(mockToken);
-      setUser(mockUser);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      setToken(data.token);
+      setUser(data.user);
     } finally {
       setIsLoading(false);
     }
