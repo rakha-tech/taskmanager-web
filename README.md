@@ -4,14 +4,14 @@ Aplikasi manajemen tugas modern yang memungkinkan pengguna untuk membuat, mengel
 
 ## 📋 Daftar Isi
 
-- [Deskripsi Proyek](#deskripsi-proyek)
-- [Teknologi Utama](#teknologi-utama)
-- [Arsitektur & Pola Desain](#arsitektur--pola-desain)
-- [Setup & Instalasi](#setup--instalasi)
-- [Menjalankan Aplikasi](#menjalankan-aplikasi)
-- [Deployment](#deployment)
-- [Struktur Proyek](#struktur-proyek)
-- [Fitur Utama](#fitur-utama)
+- [Deskripsi Proyek](#-deskripsi-proyek)
+- [Teknologi Utama](#-teknologi-utama)
+- [Arsitektur & Pola Desain](#-arsitektur--pola-desain)
+- [Setup & Instalasi](#-setup--instalasi)
+- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
+- [Deployment](#-deployment)
+- [Struktur Proyek](#-struktur-proyek)
+- [Fitur Utama](#-fitur-utama)
 
 ---
 
