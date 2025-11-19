@@ -12,6 +12,8 @@ Aplikasi manajemen tugas modern yang memungkinkan pengguna untuk membuat, mengel
 - [Deployment](#-deployment)
 - [Struktur Proyek](#-struktur-proyek)
 - [Fitur Utama](#-fitur-utama)
+- [Akses Aplikasi](#-akses-aplikasi)
+- [Link Deployment](#-link-deployment)
 
 ---
 
@@ -517,29 +519,47 @@ const filteredTasks = useMemo(() => {
 
 ---
 
+## 🌐 Akses Aplikasi
+
+### Development Lokal
+
+Pastikan backend API sudah running di `http://localhost:3001` sebelum menjalankan frontend:
+
+```bash
+# Terminal 1 - Backend
+cd TaskManager.Api
+dotnet run
+
+# Terminal 2 - Frontend
+cd frontend-web
+npm run dev
+```
+
+Buka browser: **http://localhost:3000**
+
+### Akun Demo (untuk testing)
+
+Gunakan kredensial berikut untuk login atau daftar akun baru:
+
+```
+Email: demo@example.com
+Password: Demo123!
+```
+
+---
+
 ## 🌐 Link Deployment
 
 ### Frontend Web
 
-- **Production**: https://taskmanager.sarastya.app (atau URL deployment Anda)
-- **Staging**: https://staging-taskmanager.sarastya.app
+- **Production**: https://sarastya-taskmanager.vercel.app/ (atau URL deployment yang sesuai)
+- **Backend API**: https://api.sarastya-taskmanager.com (atau URL backend yang sesuai)
 
-### Backend API
+### Untuk Testing
 
-- **Production**: https://api.taskmanager.sarastya.app (atau URL deployment Anda)
-- **Staging**: https://staging-api.taskmanager.sarastya.app
-- **API Docs**: https://api.taskmanager.sarastya.app/docs
-
-### Mobile Application
-
-#### Android
-
-- **APK Download**: https://releases.sarastya.app/taskmanager-android.apk
-- **Play Store**: https://play.google.com/store/apps/details?id=com.sarastya.taskmanager
-
-#### iOS
-
-- **App Store**: https://apps.apple.com/app/sarastya-task-manager
+1. Buka aplikasi di browser
+2. Register akun baru atau gunakan akun demo
+3. Setelah login, akses dashboard untuk mengelola tugas
 
 ---
 
@@ -683,9 +703,8 @@ Project ini dilisensikan di bawah MIT License.
 
 ## 📞 Kontak & Support
 
-- Email: support@sarastya.app
+- Email: mrakha.tech@gmail.com
 - GitHub Issues: https://github.com/rakha-tech/taskmanager-web/issues
-- Documentation: https://docs.sarastya.app
 
 ---
 
