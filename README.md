@@ -552,8 +552,8 @@ Password: Demo123!
 
 ### Frontend Web
 
-- **Production**: https://sarastya-taskmanager.vercel.app/ (atau URL deployment yang sesuai)
-- **Backend API**: https://api.sarastya-taskmanager.com (atau URL backend yang sesuai)
+- **Production**: https://taskmanager-rakha.vercel.app/ (atau URL deployment yang sesuai)
+- **Backend API**: https://taskmanager-api-production-2c84.up.railway.app
 
 ### Untuk Testing
 
